@@ -1,10 +1,10 @@
 import json
 import os
+from dataclasses import dataclass
 from typing import Any
 
 import requests
 from dotenv import load_dotenv
-from dataclasses import dataclass
 
 from src.data_pull.weather.aiport_loc import AirportLoc
 
@@ -16,11 +16,14 @@ API_URL: str = "http://api.openweathermap.org/data/2.5/weather?"
 
 def fetch_weather_info() -> dict[str, Any]:
     target_url: str = (
-        API_URL +
-        "lat=" + AirportLoc().LAT +
-        "&lon=" + AirportLoc().LON +
-        "&units=metric" +
-        "&appid=" + API_KEY
+        API_URL
+        + "lat="
+        + AirportLoc().LAT
+        + "&lon="
+        + AirportLoc().LON
+        + "&units=metric"
+        + "&appid="
+        + API_KEY
     )
     try:
         response: dict[str, Any] = requests.get(target_url).json()
@@ -30,9 +33,9 @@ def fetch_weather_info() -> dict[str, Any]:
     except json.JSONDecodeError as err:
         raise SystemExit(err)
 
-        
+
 @dataclass
-class Weather():
+class Weather:
     condition: str
     temp: float
     pressure: int
@@ -44,7 +47,6 @@ class Weather():
 
 
 @dataclass
-class NightTime():
+class NightTime:
     sunrise: int
     sunset: int
-

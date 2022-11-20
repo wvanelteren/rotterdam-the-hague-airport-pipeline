@@ -7,7 +7,7 @@ from src.data_pull.weather.aiport_loc import AirportLoc
 
 def test_load_env_variable():
     load_dotenv()
-    assert os.environ.get("TEST") == "TEST"
+    assert str(os.environ.get("TEST")) == "TEST"
 
 
 def test_url_string_concat():
@@ -25,5 +25,5 @@ def test_url_string_concat():
     )
     assert (
         target_url
-        == "http://api.openweathermap.org/data/2.5/weather?lat=51.95763674245107&lon=4.442139576041504&units=metric&appid=api_key"
-    )  # noqa
+        == "http://api.openweathermap.org/data/2.5/weather?lat=51.95763674245107&lon=4.442139576041504&units=metric&appid=api_key"  # noqa
+    )

@@ -10,7 +10,7 @@ from src.data_pull.weather.aiport_loc import AirportLoc
 
 load_dotenv()
 
-API_KEY: str = os.environ.get("OPENWEATHER_API_KEY")
+API_KEY: str = str(os.environ.get("OPENWEATHER_API_KEY"))
 API_URL: str = "http://api.openweathermap.org/data/2.5/weather?"
 
 

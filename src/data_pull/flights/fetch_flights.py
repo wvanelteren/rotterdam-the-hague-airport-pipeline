@@ -18,4 +18,10 @@ def fetch_flight_info() -> dict[str, Any]:
 
 
 def remove_string_tails(string: str):
+    """
+    Helper function to remove the first and last character of a string.
+
+    Implemented to remove brackets from the get request response so that
+    the response can be succesfully decoded to json.
+    """
     return string[1:-1]

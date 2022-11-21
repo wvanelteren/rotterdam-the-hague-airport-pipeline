@@ -1,13 +1,13 @@
 import pytest
 
-from src.data_pull.flights.fetch_flights import fetch_flight_info
+from src.data_pull.flights.fetch_flights import FlightDataHandler
 
 TARGET_URL = "https://www.rotterdamthehagueairport.nl/wp-content/themes/rtha-v2/flights.php?updated=0"  # noqa
 
 
 @pytest.fixture
 def get_request():
-    return fetch_flight_info()
+    return FlightDataHandler().fetch_flight_info()
 
 
 def test_response_is_not_null(get_request):

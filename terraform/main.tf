@@ -73,7 +73,6 @@ data "archive_file" "zip_fetch_flights_file" {
 }
 
 # Create lambda function
-# In terraform ${path.module} is the current directory.
 resource "aws_lambda_function" "terraform_lambda_func" {
   filename      = "${path.root}/../src/data_pull/flights/fetch_flights.zip"
   function_name = "flight-info-to-s3"

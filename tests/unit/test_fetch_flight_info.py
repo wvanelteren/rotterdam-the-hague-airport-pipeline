@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from src.data_pull.flights.fetch_flights import remove_string_tails
+from src.data_pull.flights.fetch_flights import FlightDataHandler
 
 
 def test_response_decodes_to_json_succesfully(api_response):
@@ -15,7 +15,19 @@ def test_response_decodes_to_json_succesfully(api_response):
 
 def test_string_tails_remover():
     string = "hello world"
-    assert remove_string_tails(string) == "ello worl"
+    assert FlightDataHandler().remove_string_tails(string) == "ello worl"
+
+
+def test_dict(api_response):
+    response = api_response[1:-1]
+    r = json.loads(response)
+    arrivals = []
+    for flights in list(r["flights"]["arrivals"].values())[0]:
+        arrivals.append(flights)
+    for flights in list(r["flights"]["arrivals"].values())[1]:
+        arrivals.append(flights)
+    print(arrivals)
+    assert arrivals is not None
 
 
 @pytest.fixture

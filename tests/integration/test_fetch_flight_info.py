@@ -7,7 +7,7 @@ TARGET_URL = "https://www.rotterdamthehagueairport.nl/wp-content/themes/rtha-v2/
 
 @pytest.fixture
 def get_request():
-    return FlightDataHandler().fetch_flight_info()
+    return FlightDataHandler().flight_data
 
 
 def test_response_is_not_null(get_request):

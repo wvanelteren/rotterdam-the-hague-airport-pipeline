@@ -1,14 +1,25 @@
 import json
+from datetime import date
 
 import pytest
+from mock import patch
 
 from src.data_pull.flights.fetch_flights import FlightDataHandler
 
 
-def test_response_decodes_to_json_succesfully(api_response):
+@pytest.fixture
+def MockFlightData(flight_data):
+    def __init__(self):
+        self.flight_data = json.loads(flight_data[1:-1])
+        self.today = date(year=2022, month=11, day=17)
+
+    with patch.object(FlightDataHandler, "__init__", __init__):
+        yield FlightDataHandler()
+
+
+def test_response_decodes_to_json_succesfully(flight_data):
     try:
-        response = api_response[1:-1]
-        json.loads(response)
+        json.loads(flight_data[1:-1])
     except json.JSONDecodeError:
         assert False
 
@@ -18,20 +29,34 @@ def test_string_tails_remover():
     assert FlightDataHandler().remove_string_tails(string) == "ello worl"
 
 
-def test_dict(api_response):
-    response = api_response[1:-1]
-    r = json.loads(response)
-    arrivals = []
-    for flights in list(r["flights"]["arrivals"].values())[0]:
-        arrivals.append(flights)
-    for flights in list(r["flights"]["arrivals"].values())[1]:
-        arrivals.append(flights)
-    print(arrivals)
-    assert arrivals is not None
+def test_print_today(MockFlightData):
+    assert MockFlightData._print_date_today() == "2022-11-17"
+
+
+def test_get_arrivals_today(MockFlightData):
+    print(MockFlightData.get_arrivals_today())
+    assert MockFlightData.get_arrivals_today() is not None
+
+
+def test_get_departures_today(MockFlightData):
+    print(MockFlightData.get_departures_today())
+    assert MockFlightData.get_departures_today() is not None
+
+
+def test_get_flight_data_today(MockFlightData):
+    key = "arrivals"
+    flights: list[dict[str, str]] = []
+    today = MockFlightData._print_date_today()
+    try:
+        for flight in MockFlightData.flight_data["flights"][key][today]:
+            flights.append(flight)
+            assert True
+    except KeyError:
+        assert False
 
 
 @pytest.fixture
-def api_response():
+def flight_data():
     return """({
     "flights": {
         "arrivals": {

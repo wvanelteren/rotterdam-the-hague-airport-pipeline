@@ -17,12 +17,12 @@ def lambda_handler(event, context):
     departures_json = json.dumps(departures, separators=(",", ":")).encode("utf-8")
 
     s3.put_object(
-        Bucket="wvane.flight-info",
+        Bucket="wvane.flight-data-raw",
         Key="arrivals/" + current_datetime_to_string() + ".json",
         Body=bytes(arrivals_json),
     )
     s3.put_object(
-        Bucket="wvane.flight-info",
+        Bucket="wvane.flight-data-raw",
         Key="departures/" + current_datetime_to_string() + ".json",
         Body=bytes(departures_json),
     )

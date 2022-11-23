@@ -4,8 +4,8 @@ provider "aws" {
   shared_credentials_files = ["C:/Users/wvane/.aws/credentials"]
 }
 
-resource "aws_s3_bucket" "b" {
-  bucket = "wvane.flight-info"
+resource "aws_s3_bucket" "bucekt_flight_data_raw" {
+  bucket = "wvane.flight-data-raw"
 }
 
 resource "aws_iam_role" "lambda_role" {

@@ -75,7 +75,7 @@ data "archive_file" "zip_fetch_flights_file" {
 # Create lambda function
 resource "aws_lambda_function" "terraform_lambda_func" {
   filename      = "${path.root}/../src/data_pull/flights/fetch_flights.zip"
-  function_name = "flight-info-to-s3"
+  function_name = "flight-data-raw-to-s3"
   role          = aws_iam_role.lambda_role.arn
   handler       = "fetch_flights.lambda_handler"
   runtime       = "python3.9"

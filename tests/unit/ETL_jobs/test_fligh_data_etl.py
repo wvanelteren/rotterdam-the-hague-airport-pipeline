@@ -27,5 +27,4 @@ def test_deduplicate_keep_entry_with_latest_timestamp(load_merged_data):
     df = load_merged_data.sort_values("badge_id").drop_duplicates(
         ["flightID"], keep="last"
     )
-    df.to_csv("output_2.csv")
     assert df["flightID"].is_unique

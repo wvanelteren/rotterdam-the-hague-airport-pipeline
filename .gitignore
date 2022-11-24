@@ -171,6 +171,9 @@ response.json
 # AWS Lambda packages
 *.zip
 
+# Glue test response files
+*.csv
+
 ###### TERRAFORM IGNORE
 # Local .terraform directories
 terraform/.terraform/

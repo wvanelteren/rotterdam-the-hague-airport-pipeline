@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from src.data_pull.weather.aiport_loc import AirportLoc
+from src.data_pull.weather.fetch_weather import AirportLoc
 
 
 def test_load_env_variable():

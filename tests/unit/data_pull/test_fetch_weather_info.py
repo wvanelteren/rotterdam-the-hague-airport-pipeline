@@ -27,3 +27,10 @@ def test_url_string_concat():
         target_url
         == "http://api.openweathermap.org/data/2.5/weather?lat=51.95763674245107&lon=4.442139576041504&units=metric&appid=api_key"  # noqa
     )
+
+
+def test_is_dark_returns_correct_bool():
+    timestamp = 1669400294
+    sunset = 1669390799
+    sunrise = 1669360859
+    assert not sunrise < timestamp < sunset is True

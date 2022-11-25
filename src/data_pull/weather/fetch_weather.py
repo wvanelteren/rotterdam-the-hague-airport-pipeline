@@ -16,7 +16,7 @@ def lambda_handler(event, context):
 
     weather = weather_data_handler.get_weather_data()
 
-    weather_json = json.dumps(weather, separators=(",", ":")).encode("utf-8")
+    weather_json = json.dumps([weather], separators=(",", ":")).encode("utf-8")
 
     s3.put_object(
         Bucket="wvane.weather-data-raw",
@@ -126,7 +126,7 @@ class WeatherDataHandler:
             sunset: int = self.weather_data["sys"]["sunset"]
         except KeyError:
             raise
-        return sunrise >= timestamp >= sunset
+        return not sunrise <= timestamp <= sunset
 
 
 @dataclass

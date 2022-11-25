@@ -6,8 +6,12 @@ import pytest
 
 @pytest.fixture
 def load_merged_data():
-    departures_df_1 = pd.read_json("tests/unit/ETL_jobs/departures_data_1.json")
-    departures_df_2 = pd.read_json("tests/unit/ETL_jobs/departures_data_2.json")
+    departures_df_1 = pd.read_json(
+        "tests/unit/ETL_jobs/flight_data/departures_data_1.json"
+    )
+    departures_df_2 = pd.read_json(
+        "tests/unit/ETL_jobs/flight_data/departures_data_2.json"
+    )
     return pd.concat([departures_df_1, departures_df_2], axis=0, ignore_index=True)
 
 

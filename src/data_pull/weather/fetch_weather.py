@@ -1,26 +1,43 @@
 import json
 import os
+import urllib.error
+import urllib.request
 from dataclasses import asdict, dataclass
-from datetime import date
+from datetime import date, datetime
 from typing import Any, Tuple
 
-import requests
-from dotenv import load_dotenv
+import boto3
 
 
-def run() -> None:
-    print(WeatherDataHanlder().get_weather_data())
+def lambda_handler(event, context):
+    api_key: str = os.environ["OPENWEATHER_API_KEY"]
+    weather_data_handler = WeatherDataHandler(api_key=api_key)
+    s3 = boto3.client("s3")
+
+    weather = weather_data_handler.get_weather_data()
+
+    weather_json = json.dumps(weather, separators=(",", ":")).encode("utf-8")
+
+    s3.put_object(
+        Bucket="wvane.weather-data-raw",
+        Key=current_datetime_to_string() + ".json",
+        Body=bytes(weather_json),
+    )
+    return weather_json
 
 
-class WeatherDataHanlder:
+def current_datetime_to_string() -> str:
+    current_time: date = datetime.now()
+    return current_time.strftime("%Y/%m/%d/%H.%M")
 
-    load_dotenv()
-    API_KEY: str = str(os.environ.get("OPENWEATHER_API_KEY"))
+
+class WeatherDataHandler:
+
     API_URL: str = "http://api.openweathermap.org/data/2.5/weather?"
 
-    def __init__(self):
+    def __init__(self, api_key: str):
+        self.api_key: str = api_key
         self.weather_data: dict[str, Any] = self._fetch_weather_data()
-        self.today: date = date.today()
 
     def _fetch_weather_data(self) -> dict[str, Any]:
         target_url: str = (
@@ -31,12 +48,12 @@ class WeatherDataHanlder:
             + AirportLoc().LON
             + "&units=metric"
             + "&appid="
-            + self.API_KEY
+            + self.api_key
         )
         try:
-            response: dict[str, Any] = requests.get(target_url).json()
-            return response
-        except requests.exceptions.HTTPError as err:
+            response: str = urllib.request.urlopen(target_url).read()
+            return json.loads(response)
+        except urllib.error.HTTPError as err:
             raise SystemExit(err)
         except json.JSONDecodeError as err:
             raise SystemExit(err)
@@ -138,7 +155,3 @@ class AirportLoc:
     LON: str = "4.442139576041504"
     ZIP_CODE: str = "3045AP"
     COUNTRY: str = "NL"
-
-
-if __name__ == "__main__":
-    run()

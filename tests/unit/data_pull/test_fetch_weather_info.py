@@ -7,7 +7,7 @@ from src.data_pull.weather.fetch_weather import AirportLoc
 
 def test_load_env_variable():
     load_dotenv()
-    assert str(os.environ.get("TEST")) == "TEST"
+    assert str(os.environ.get("TEST")) == "TEST"  # type: ignore
 
 
 def test_url_string_concat():

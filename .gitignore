@@ -167,6 +167,7 @@ cython_debug/
 
 # AWS CLI response
 response.json
+response2.json
 
 # AWS Lambda packages
 *.zip
@@ -177,6 +178,7 @@ response.json
 ###### TERRAFORM IGNORE
 # Local .terraform directories
 terraform/.terraform/
+terraform/data_pull/.terraform
 
 # .tfstate files
 *.tfstate

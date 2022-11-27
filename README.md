@@ -6,16 +6,15 @@
 <br />
 <div align="center">
   <a href="https://github.com/wvanelteren/rotterdam-the-hague-airport-pipeline">
-    <img src="assets/imgages/RTHA_logo.jpg" alt="Logo" width="320" height="180">
+    <img src="assets/images/RTHA_logo.jpg" alt="Logo" width="480" height="230">
   </a>
 
-<h3 align="center">Rotterdam The Hague Flight Schedule Serverless Data Pipeline</h3>
+<h2 align="center">Rotterdam The Hague Flight Schedule Serverless Data Pipeline</h2>
 
   <p align="center">
-    <br>
-    <strong> This project is NOT affiliated with, funded, or in any way associated with RTHA (Rotterdam the Hague Airport) or any other subsidiary of the Schiphol Group
-    </strong></a>
-    <br>
+    <small> This project is NOT affiliated with, funded, or in any way associated with RTHA (Rotterdam the Hague Airport) or any other subsidiary of the Schiphol Group
+    </small>
+    </a>
     <br>
   </p>
 </div>

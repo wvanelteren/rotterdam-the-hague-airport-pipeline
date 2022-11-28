@@ -61,7 +61,7 @@ I use AWS Eventbridge Scheduler to orchestrate the data pipeline as follows:
 ### Architecture Diagram
 
   <a href="https://github.com/wvanelteren/rotterdam-the-hague-airport-pipeline">
-    <img src="assets/images/architecture_diagram.png" alt="diagram" width="1280" height="400" style="transform:rotate(90deg);>
+    <img src="assets/images/architecture_diagram.png" alt="diagram" width="800" height="480">
   </a>
 
 ## Getting Started

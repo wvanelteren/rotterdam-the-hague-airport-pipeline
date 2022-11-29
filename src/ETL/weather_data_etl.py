@@ -7,7 +7,7 @@ import pandas as pd
 def run_ETL() -> None:
     weather_data = Extractor().extract()
     transformed_weather_data = Transformer(weather_data).transform()
-    Loader(transformed_weather_data).to_csv()
+    Loader(transformed_weather_data).to_parquet()
 
 
 class Extractor:
@@ -50,18 +50,18 @@ class Loader:
     today: date = date.today()
     filename: str = today.strftime("%Y-%m-%d")
 
-    TARGET_PATH: str = "s3://wvane.weather-data-clean/" + filename
+    TARGET_PATH: str = "s3://wvane.weather-data-clean/"
 
     def __init__(self, df):
         self.df = df
 
-    def to_csv(self, path: str = TARGET_PATH) -> None:
-        target_path: str = path + ".csv"
+    def to_csv(self, path: str = TARGET_PATH, filename: str = filename) -> None:
+        target_path: str = path + "weather_csv/" + filename + ".csv"
         wr.s3.to_csv(self.df, target_path, index=False)
 
     def to_parquet(self, path: str = TARGET_PATH) -> None:
-        target_path: str = path + ".parquet"
-        wr.s3.to_parquet(self.df, target_path, index=False)
+        target_path: str = path + "weather.parquet"
+        wr.s3.to_parquet(df=self.df, path=target_path, dataset=True, mode="append")
 
 
 if __name__ == "__main__":

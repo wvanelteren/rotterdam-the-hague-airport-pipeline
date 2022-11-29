@@ -1,6 +1,7 @@
 from datetime import date
 
 import awswrangler as wr
+import pandas as pd
 
 
 def run_ETL() -> None:
@@ -11,13 +12,13 @@ def run_ETL() -> None:
 def arrivals_ETL() -> None:
     arrivals = Extractor().extract_arrivals()
     transformed_arrivals = Transformer(arrivals).transform()
-    Loader(transformed_arrivals).arrivals_to_csv()
+    Loader(transformed_arrivals).arrivals_to_parquet()
 
 
 def departures_ETL() -> None:
     departures = Extractor().extract_departures()
     transformed_departures = Transformer(departures).transform()
-    Loader(transformed_departures).departures_to_csv()
+    Loader(transformed_departures).departures_to_parquet()
 
 
 class Extractor:
@@ -47,6 +48,8 @@ class Transformer:
     def transform(self):
         self._change_badgeid_column_to_timestamp()
         self._deduplicate_keep_entry_with_latest_timestamp()
+        self._create_column_difference_sched_and_status_time()
+        self._create_column_is_delayed()
         return self.df
 
     def _change_badgeid_column_to_timestamp(self) -> None:
@@ -57,38 +60,55 @@ class Transformer:
 
     def _deduplicate_keep_entry_with_latest_timestamp(self) -> None:
         try:
-            self.df = self.df.sort_values("timestamp").drop_duplicates(
+            self.df = self.df.sort_values("timestamp_crawled").drop_duplicates(
                 ["flightID"], keep="last"
             )
         except KeyError:
             raise
+
+    def _create_column_difference_sched_and_status_time(self) -> None:
+        try:
+            self.df["flightDiff_TIME"] = (
+                self.df["flightSTATUS_TIME"] - self.df["flightSCHED_TIME"]
+            )
+        except KeyError:
+            raise
+
+    def _create_column_is_delayed(self) -> None:
+        self.df["flightIS_DELAYED"] = self.df["flightDiff_TIME"].map(
+            lambda x: True if x > pd.Timedelta(minutes=15) else False
+        )
 
 
 class Loader:
     today: date = date.today()
     filename: str = today.strftime("%Y-%m-%d")
 
-    TARGET_PATH_ARRIVALS: str = "s3://wvane.flight-data-clean/arrivals/" + filename
-    TARGET_PATH_DEPARTURES: str = "s3://wvane.flight-data-clean/departures/" + filename
+    TARGET_PATH_ARRIVALS: str = "s3://wvane.flight-data-clean/"
+    TARGET_PATH_DEPARTURES: str = "s3://wvane.flight-data-clean/"
 
     def __init__(self, df):
         self.df = df
 
-    def arrivals_to_csv(self) -> None:
-        target_path: str = self.TARGET_PATH_ARRIVALS + ".csv"
+    def arrivals_to_csv(
+        self, path: str = TARGET_PATH_ARRIVALS, filename: str = filename
+    ) -> None:
+        target_path: str = path + "arrivals_csv/" + filename + ".csv"
         wr.s3.to_csv(self.df, target_path, index=False)
 
-    def departures_to_csv(self) -> None:
-        target_path: str = self.TARGET_PATH_DEPARTURES + ".csv"
+    def departures_to_csv(
+        self, path: str = TARGET_PATH_DEPARTURES, filename: str = filename
+    ) -> None:
+        target_path: str = path + "departures_csv/" + filename + ".csv"
         wr.s3.to_csv(self.df, target_path, index=False)
 
-    def arrivals_to_parquet(self) -> None:
-        target_path: str = self.TARGET_PATH_ARRIVALS + ".parquet"
-        wr.s3.to_parquet(self.df, target_path, index=False)
+    def arrivals_to_parquet(self, path: str = TARGET_PATH_ARRIVALS) -> None:
+        target_path: str = path + "arrivals.parquet"
+        wr.s3.to_parquet(df=self.df, path=target_path, dataset=True, mode="append")
 
-    def departures_to_parquet(self) -> None:
-        target_path: str = self.TARGET_PATH_DEPARTURES + ".parquet"
-        wr.s3.to_parquet(self.df, target_path, index=False)
+    def departures_to_parquet(self, path: str = TARGET_PATH_DEPARTURES) -> None:
+        target_path: str = path + "departures.parquet"
+        wr.s3.to_parquet(df=self.df, path=target_path, dataset=True, mode="append")
 
 
 if __name__ == "__main__":

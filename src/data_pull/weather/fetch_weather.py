@@ -63,7 +63,7 @@ class WeatherDataHandler:
             condition: str = self.weather_data["weather"][0].get("main", "")
             condition_description: str = self.weather_data["weather"][0].get(
                 "description", ""
-            )  # noqa
+            )
             temp: float = self.weather_data["main"]["temp"]
             pressure: int = self.weather_data["main"]["pressure"]
             humidity: int = self.weather_data["main"]["humidity"]
@@ -94,10 +94,10 @@ class WeatherDataHandler:
         ).as_dict()
 
     def _get_wind_data(self) -> Tuple[float, int]:
-        wind_speed: float = 0
+        wind_speed: float = 0.0
         wind_direction: int = -1
         if self.weather_data.get("wind") is not None:
-            wind_speed = self.weather_data["wind"].get("speed", 0)
+            wind_speed = self.weather_data["wind"].get("speed", 0.0)
             wind_direction = self.weather_data["wind"].get("deg", -1)
         return wind_speed, wind_direction
 
@@ -108,15 +108,15 @@ class WeatherDataHandler:
         return cloudiness
 
     def _get_rain_data(self) -> float:
-        rain: float = 0
+        rain: float = 0.0
         if self.weather_data.get("rain") is not None:
-            rain = self.weather_data["rain"].get("1h", 0)
+            rain = self.weather_data["rain"].get("1h", 0.0)
         return rain
 
     def _get_snow_data(self) -> float:
-        rain: float = 0
+        rain: float = 0.0
         if self.weather_data.get("snow") is not None:
-            rain = self.weather_data["snow"].get("1h", 0)
+            rain = self.weather_data["snow"].get("1h", 0.0)
         return rain
 
     def _is_dark(self) -> bool:

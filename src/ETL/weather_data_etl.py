@@ -43,7 +43,10 @@ class Transformer:
         self.df = self.df.drop_duplicates("timestamp")
 
     def _change_timestamp_from_unix_to_datetime(self) -> None:
-        self.df["timestamp"] = pd.to_datetime(self.df["timestamp"], unit="s")
+        try:
+            self.df["timestamp"] = pd.to_datetime(self.df["timestamp"], unit="s")
+        except KeyError:
+            raise
 
 
 class Loader:

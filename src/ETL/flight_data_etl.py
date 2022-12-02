@@ -1,7 +1,6 @@
 from datetime import date
 
 import awswrangler as wr
-import pandas as pd
 
 
 def run_ETL() -> None:
@@ -46,15 +45,15 @@ class Transformer:
         self.df = df
 
     def transform(self):
-        self._change_badgeid_column_to_timestamp()
+        self._change_badgeid_column_to_timestamp_crawled()
         self._deduplicate_keep_entry_with_latest_timestamp()
-        self._create_column_difference_sched_and_status_time()
+        self._create_column_difference_sched_and_status_time_in_minutes()
         self._create_column_is_delayed()
         return self.df
 
-    def _change_badgeid_column_to_timestamp(self) -> None:
+    def _change_badgeid_column_to_timestamp_crawled(self) -> None:
         try:
-            self.df.rename(columns={"badge_id": "timestamp"}, inplace=True)
+            self.df.rename(columns={"badge_id": "timestamp_crawled"}, inplace=True)
         except KeyError:
             raise
 
@@ -66,18 +65,16 @@ class Transformer:
         except KeyError:
             raise
 
-    def _create_column_difference_sched_and_status_time(self) -> None:
+    def _create_column_difference_sched_and_status_time_in_minutes(self) -> None:
         try:
-            self.df["flightDiff_TIME"] = (
+            self.df["flightDIFF_TIME"] = (
                 self.df["flightSTATUS_TIME"] - self.df["flightSCHED_TIME"]
-            )
+            ).map(lambda x: x.total_seconds() / 60)
         except KeyError:
             raise
 
     def _create_column_is_delayed(self) -> None:
-        self.df["flightIS_DELAYED"] = self.df["flightDiff_TIME"].map(
-            lambda x: True if x > pd.Timedelta(minutes=15) else False
-        )
+        self.df["flightIS_DELAYED"] = self.df["flightDIFF_TIME"] > 15
 
 
 class Loader:

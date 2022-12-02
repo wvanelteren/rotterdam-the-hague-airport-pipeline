@@ -29,15 +29,16 @@ def test_if_duplicates_present(load_merged_data):
 
 @pytest.mark.parametrize(
     ("index, expected"),
-    [(0, pd.Timedelta("0 days 00:14:00")), (1, pd.Timedelta("-1 days +23:40:00"))],
+    [(0, 14), (1, -20)],
 )
 def test_creation_new_column_difference_flight_time_scheduled_and_flight_time_status(
     load_merged_data, index, expected
 ):
-    load_merged_data["flightDiff_TIME"] = (
+    load_merged_data["flightDIFF_TIME"] = (
         load_merged_data["flightSTATUS_TIME"] - load_merged_data["flightSCHED_TIME"]
-    )
-    assert load_merged_data["flightDiff_TIME"][index] == expected
+    ).map(lambda x: x.total_seconds() / 60)
+    print(load_merged_data["flightDIFF_TIME"][index])
+    assert load_merged_data["flightDIFF_TIME"][index] == expected
 
 
 @pytest.mark.parametrize(
@@ -45,12 +46,10 @@ def test_creation_new_column_difference_flight_time_scheduled_and_flight_time_st
     [(0, False), (1, False)],
 )
 def test_creation_new_column_is_delayed(load_merged_data, index, expected):
-    load_merged_data["flightDiff_TIME"] = (
+    load_merged_data["flightDIFF_TIME"] = (
         load_merged_data["flightSTATUS_TIME"] - load_merged_data["flightSCHED_TIME"]
-    )
-    load_merged_data["flightIS_DELAYED"] = load_merged_data["flightDiff_TIME"].map(
-        lambda x: True if x > pd.Timedelta(minutes=15) else False
-    )
+    ).map(lambda x: x.total_seconds() / 60)
+    load_merged_data["flightIS_DELAYED"] = load_merged_data["flightDIFF_TIME"] > 15
     assert load_merged_data["flightIS_DELAYED"][index] == expected  # noqa
 
 

@@ -6,12 +6,8 @@ import pytest
 
 @pytest.fixture
 def load_merged_data():
-    departures_df_1 = pd.read_json(
-        "tests/unit/ETL_jobs/flight_data/departures_data_1.json"
-    )
-    departures_df_2 = pd.read_json(
-        "tests/unit/ETL_jobs/flight_data/departures_data_2.json"
-    )
+    departures_df_1 = pd.read_json("tests/unit/ETL_jobs/flight_data/departures_data_1.json")
+    departures_df_2 = pd.read_json("tests/unit/ETL_jobs/flight_data/departures_data_2.json")
     return pd.concat([departures_df_1, departures_df_2], axis=0, ignore_index=True)
 
 
@@ -28,12 +24,10 @@ def test_if_duplicates_present(load_merged_data):
 
 
 @pytest.mark.parametrize(
-    ("index, expected"),
+    "index, expected",
     [(0, 14), (1, -20)],
 )
-def test_creation_new_column_difference_flight_time_scheduled_and_flight_time_status(
-    load_merged_data, index, expected
-):
+def test_creation_new_column_difference_flight_time_scheduled_and_flight_time_status(load_merged_data, index, expected):
     load_merged_data["flightDIFF_TIME"] = (
         load_merged_data["flightSTATUS_TIME"] - load_merged_data["flightSCHED_TIME"]
     ).map(lambda x: x.total_seconds() / 60)
@@ -42,7 +36,7 @@ def test_creation_new_column_difference_flight_time_scheduled_and_flight_time_st
 
 
 @pytest.mark.parametrize(
-    ("index, expected"),
+    "index, expected",
     [(0, False), (1, False)],
 )
 def test_creation_new_column_is_delayed(load_merged_data, index, expected):
@@ -62,7 +56,5 @@ def test_name_change(load_merged_data):
 
 
 def test_deduplicate_keep_entry_with_latest_timestamp(load_merged_data):
-    df = load_merged_data.sort_values("badge_id").drop_duplicates(
-        ["flightID"], keep="last"
-    )
+    df = load_merged_data.sort_values("badge_id").drop_duplicates(["flightID"], keep="last")
     assert df["flightID"].is_unique

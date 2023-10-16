@@ -14,14 +14,7 @@ def test_url_string_concat():
     API_URL = "http://api.openweathermap.org/data/2.5/weather?"
     API_KEY = "api_key"
     target_url = (
-        API_URL
-        + "lat="
-        + AirportLoc().LAT
-        + "&lon="
-        + AirportLoc().LON
-        + "&units=metric"
-        + "&appid="
-        + API_KEY
+        API_URL + "lat=" + AirportLoc().LAT + "&lon=" + AirportLoc().LON + "&units=metric" + "&appid=" + API_KEY
     )
     assert (
         target_url

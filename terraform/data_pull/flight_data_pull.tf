@@ -17,6 +17,11 @@ resource "aws_lambda_function" "terraform_pull_flight_data_lambda_func" {
   function_name = "flight-data-raw-to-s3"
   role          = aws_iam_role.lambda_role.arn
   handler       = "fetch_flights.lambda_handler"
-  runtime       = "python3.9"
+  runtime       = "python3.11"
   depends_on    = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+  environment {
+    variables = {
+      BUCKET_NAME = aws_s3_bucket.bucket_flight_data_raw.bucket
+    }
+  }
 }

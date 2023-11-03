@@ -14,5 +14,5 @@ def setup_logger(logger_name, level=logging.DEBUG):
     logger.addHandler(stream_handler)
     return logger
 
-logger = setup_logger("rth-data-pipeline")
 
+logger = setup_logger("rth-data-pipeline")

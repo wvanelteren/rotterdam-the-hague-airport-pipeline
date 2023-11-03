@@ -13,9 +13,10 @@ from src.utils.logger import logger
 
 API_URL: str = "http://api.openweathermap.org/data/2.5/weather?"
 
+
 def lambda_handler(event, context):
     api_key: str = os.environ["OPENWEATHER_API_KEY"]
-    bucket_name = os.environ['BUCKET_NAME']
+    bucket_name = os.environ["BUCKET_NAME"]
     weather_data_handler = OpenWeatherDataHandler(api_key=api_key)
     s3 = boto3.client("s3")
 
@@ -52,6 +53,7 @@ class Weather:
     snow: float
     is_dark: bool
     timestamp: int
+
 
 @dataclass(frozen=True)
 class AirportLoc:
@@ -133,7 +135,7 @@ class OpenWeatherDataHandler:
             timestamp=timestamp,
         )
 
-    def _get_wind_data(self) -> Tuple[float, None|int]:
+    def _get_wind_data(self) -> Tuple[float, None | int]:
         """Get wind speed and direction"""
         wind_speed: float = 0.0
         wind_direction = None

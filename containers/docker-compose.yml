@@ -1,0 +1,15 @@
+version: '3.10'
+
+services:
+  glue-job-etl:
+    container_name: glue-job-etl
+    build:
+      context: ..
+      dockerfile: containers/awsglue.dockerfile
+    stdin_open: true  # docker run -i
+    tty: true # docker run -t
+    environment:
+      DISABLE_SSL: 'true'
+    volumes:
+      - ${USERPROFILE}/.aws:/home/glue_user/.aws:ro
+    network_mode: "host"

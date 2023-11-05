@@ -1,6 +1,3 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX-License-Identifier: MIT-0
-
 import importlib
 import sys
 
@@ -10,18 +7,23 @@ from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 
 
-def main(input_path, output_path, module_name, function_name, glue_config=None):
+def main(input_path, output_path, conn_type, module_name, function_name, glue_config=None):
     """
-    There is a main function of Glue job driver. The idea is to keep it generic to be able to reuse for running
-    multiple Glue jobs. Driver is responsible to validate input parameters and invoke a proper Glue job. It does not
-    contain any specific business logic.
+    Main function of Glue job driver. This function is kept generic for reusability across multiple Glue jobs. 
+    It validates input parameters and invokes the appropriate Glue job. It does not contain any specific business logic.
 
-    @param input_path: input path contains input files to the job
-    @param output_path: output path used to write Glue job results
-    @param module_name and function_name: are used to call Glue job using reflection
-    @param glue_config: optional additional Glue configuration parameters
+    Parameters example:
+        --JOB_NAME=movie_analytics_job --CONN_TYPE=file --INPUT_PATH=/input --OUTPUT_PATH=/results --MODULE_NAME=tasks --FUNCTION_NAME=create_and_stage_average_rating
 
-    Parameters example: --JOB_NAME=movie_analytics_job --CONN_TYPE=file --INPUT_PATH=/input --OUTPUT_PATH=/results --MODULE_NAME=tasks --FUNCTION_NAME=create_and_stage_average_rating
+    Args:
+        input_path: The input path containing input files to the job.
+        output_path: The output path used to write Glue job results.
+        module_name: The name of the module containing the Glue job function.
+        function_name: The name of the function to call for the Glue job.
+        glue_config: Optional additional Glue configuration parameters.
+
+    Raises:
+        ValueError: If the module or function cannot be found.
     """
     try:
         glue_context = GlueContext(SparkContext.getOrCreate())
@@ -30,7 +32,7 @@ def main(input_path, output_path, module_name, function_name, glue_config=None):
         module.init_glue(glue_context)
         module.init_spark(glue_context.spark_session)
         f = getattr(module, function_name)
-        f(input_path, output_path)
+        f(input_path, output_path, conn_type)
 
         job = Job(glue_context)
         job.init("test")
@@ -48,6 +50,7 @@ if __name__ == "__main__":
         [
             "INPUT_PATH",
             "OUTPUT_PATH",
+            "CONN_TYPE",
             "MODULE_NAME",
             "FUNCTION_NAME",
         ],
@@ -56,6 +59,7 @@ if __name__ == "__main__":
     main(
         input_path=args["INPUT_PATH"],
         output_path=args["OUTPUT_PATH"],
+        conn_type=args["CONN_TYPE"],
         module_name=args["MODULE_NAME"],
         function_name=args["FUNCTION_NAME"],
     )

@@ -21,14 +21,11 @@ ENV PACKAGE="${WORKDIR}/helpers"
 ENV PYTHONPATH="${PYTHONPATH}:$PACKAGE"
 ENV PATH="/home/glue_user/.local/bin:$PATH"
 
-RUN python3 -m pip install --upgrade pip --user
-# RUN pip3 install --no-cache-dir poetry --user
-# RUN python3 -m poetry export -o requirements.txt
-# RUN pip3 install --no-cache-dir --upgrade -r requirements.txt --user
 
+RUN python3 -m pip install --upgrade pip --user
 COPY ../src/glue ${WORKDIR}
 
-# Give write permission incase of any issues
+# Give write permission incase of any permission issues
 USER root
 RUN chown -R glue_user:groupcontainer /home/glue_user/workspace
 USER glue_user

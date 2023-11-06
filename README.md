@@ -23,28 +23,28 @@
 ## About The Project
 
 ### Motivation
-Transavia is one of the most underrated airlines in Western Europe. They are technically a low cost carrier, but the experience in flying with them puts the economy class experience of many major airlines to shame. Furthermore, they are super developer friendly, especially compared to other budget airlines such as Ryan air and Whizz air (just check out their [developer portal](https://developer.transavia.com/)!)
+Transavia is one of the most underrated airlines in Western Europe. They are technically a low cost carrier, but their economy class experience puts many major airlines to shame. They are also super developer friendly, especially compared to other budget airlines such as Ryan air and Whizz air (just check out their [developer portal](https://developer.transavia.com/)!)
 
-If you have the chance to fly with them, there is a good chance you have to fly from/to Rotterdam The Hague Airport (RTHA), one of their two hubs in the Netherlands (the other one is the far more popular Schiphol airport, in Amsterdam). Just like Transavia, this airport is massively underrated. RTHA is a small yet great airport. Some of its perks:
+If you have the chance to fly with Transavia, there might be a chance you fly from/to Rotterdam The Hague Airport (RTHA), one of their two hubs in the Netherlands (the other one is the far more popular Schiphol airport). Just like Transavia, this airport is massively underrated. RTHA is a small yet great airport. Some of its perks:
 * Recently renovated
-* Fast customs, don't have to take your liquids out of your bag
+* Easy customs; don't have to take your liquids + electronic devices out of your bag
 * Easy to get to
 * Queues were suprisingly okay during the 2022 summer when Schiphol and Eindhoven airport had queues straight out of hell.
 
-I really like flying from/to RTHA with Transavia. Sadly, most people I know seem to not consider flights from RTHA for their vacation, only Schiphol and Eindhoven (some even didn't know RTHA existed!). Therefore, I thought it was time to give this airport a little more love by making their flight data the subject of this data pipeline.
+I really like flying from/to RTHA with Transavia. Sadly, most people I know seem to not consider flights from RTHA, only Schiphol and Eindhoven (some even didn't know RTHA existed!). Therefore, I thought it was time to give this airport a little more love by making their flight data the subject of this data pipeline.
 
 ### The Data Pipeline
 
-This is a serverless ETL pipeline that scrapes and preprocesses flight schedule data from [RTHA website]() and pulls weather data from [Openweather API]() to explore the effect of weather conditions on flight delay. A delayed flight is understood as a flight that lands/takes off >15 minutes later than the scheduled flight time.
+This is a serverless ETL pipeline that scrapes and preprocesses flight schedule data from [RTHA website]() and pulls weather data from [Openweather API]() to explore the effect of weather conditions on flight delay. A delayed flight is understood as a flight that lands/takes off >= 15 minutes later than the scheduled flight time (The United States Federal Aviation Administration (FAA) considers a flight to be delayed when it is 15 minutes later than its scheduled time).
 
 **Data Pull** \
-Scrapes flights arrivals and departures txt data from [RTHA website]() and pulls weather data from the [Openweather API]() via AWS Lambdas and loads both into S3 buckets as JSON Array objects
+Scrapes flights arrivals and departures txt data from [RTHA website]() and pulls JSON weather data from the [Openweather API]() via AWS Lambda and loads the data into S3 buckets as JSON Array objects
 
 **ETL** \
 ETL is handled by AWS Glue Spark
 *Extracts* all the responses from data pull lambdas and merges them into their respective dataframe. \
 *Transforms* rows in dataframe using Spark; schema changes, feature engineering, etc. \
-*Loads* dataframe into datalake (S3 + Parquet + AWS Data Catalog).
+*Loads* dataframe into S3 as parquet (redshift too exepensive)
 
 **Analysis** \
 Create table of arrivals, departures and weather data with AWS Athena; query to create final dataset that adds the current weather conditions to the scheduled flight time. Query stored in S3 as .csv file to download and perform statistical analysis on and visualise (once I have enough data :D)

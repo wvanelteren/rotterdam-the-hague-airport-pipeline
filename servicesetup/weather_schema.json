@@ -1,0 +1,67 @@
+[
+    {
+      "Name": "condition",
+      "Type": "string",
+      "Comment": ""
+    },
+    {
+      "Name": "condition_description",
+      "Type": "string",
+      "Comment": ""
+    },
+    {
+      "Name": "temp",
+      "Type": "double",
+      "Comment": ""
+    },
+    {
+      "Name": "pressure",
+      "Type": "int",
+      "Comment": ""
+    },
+    {
+      "Name": "humidity",
+      "Type": "int",
+      "Comment": ""
+    },
+    {
+      "Name": "visibility",
+      "Type": "int",
+      "Comment": ""
+    },
+    {
+      "Name": "wind_speed",
+      "Type": "double",
+      "Comment": ""
+    },
+    {
+      "Name": "wind_direction",
+      "Type": "int",
+      "Comment": ""
+    },
+    {
+      "Name": "cloudiness",
+      "Type": "int",
+      "Comment": ""
+    },
+    {
+      "Name": "rain",
+      "Type": "double",
+      "Comment": ""
+    },
+    {
+      "Name": "snow",
+      "Type": "double",
+      "Comment": ""
+    },
+    {
+      "Name": "is_dark",
+      "Type": "boolean",
+      "Comment": ""
+    },
+    {
+      "Name": "timestamp",
+      "Type": "timestamp",
+      "Comment": ""
+    }
+  ]

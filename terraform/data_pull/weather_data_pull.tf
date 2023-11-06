@@ -1,6 +1,6 @@
 # Create bucket for storing flight data api response
 resource "aws_s3_bucket_acl" "bucket_weather_data_raw" {
-  bucket = "wvane.weather-data-raw-${random_uuid.uuid.result}"
+  bucket = "weather-data-raw-${random_uuid.uuid.result}"
   acl    = "private"
 }
 

@@ -1,0 +1,1 @@
+SELECT * FROM "AwsDataCatalog"."test"."weather" limit 10;

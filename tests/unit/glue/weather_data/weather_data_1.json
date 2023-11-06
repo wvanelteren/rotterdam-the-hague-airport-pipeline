@@ -1,0 +1,17 @@
+[
+    {
+        "condition": "Clouds",
+        "condition_description": "broken clouds",
+        "temp": 11.87,
+        "pressure": 1016,
+        "humidity": 84,
+        "visibility": 10000,
+        "wind_speed": 4.12,
+        "wind_direction": 230,
+        "cloudiness": 75,
+        "rain": 0,
+        "snow": 0,
+        "is_dark": false,
+        "timestamp": 1669383432
+    }
+]

@@ -4,7 +4,7 @@ from datetime import date
 import pytest
 from mock import patch
 
-from src.data_pull.flights.fetch_flights import FlightDataHandler
+from src.data_pull.lambdas.fetch_flights import FlightDataHandler
 
 
 @pytest.fixture

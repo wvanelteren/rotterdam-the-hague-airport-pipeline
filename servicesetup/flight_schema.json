@@ -1,0 +1,97 @@
+[
+    {
+        "Name": "flightID",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightFLT",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightPORT",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightIATA_PORT",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightAIRLINE_NAME",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightARRIVALHALLS",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightBELTS",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSCHED_DATE",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSCHED_TIME",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "timestamp",
+        "Type": "int",
+        "Comment": "timestamp crawled"
+    },
+    {
+        "Name": "flightVIA",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSTATUS",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSTATUS_TIME",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSTATUSCLASS",
+        "Type": "string",
+        "Comment": ""
+    },
+    {
+        "Name": "rn",
+        "Type": "int",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSTATUS_DATETIME",
+        "Type": "timestamp",
+        "Comment": ""
+    },
+    {
+        "Name": "flightSCHED_DATETIME",
+        "Type": "timestamp",
+        "Comment": ""
+    },
+    {
+        "Name": "flightDIFF_TIME",
+        "Type": "int",
+        "Comment": "in minutes"
+    },
+    {
+        "Name": "flightIS_DELAYED",
+        "Type": "boolean",
+        "Comment": ""
+    }
+]

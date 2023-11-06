@@ -70,7 +70,7 @@ def transform_unixtime_to_datetime(df: DataFrame) -> DataFrame:
     return df.withColumn("timestamp", to_timestamp("timestamp"))
 
 
-def create_and_stage_weather_data(input_path: str, output_path: str) -> DataFrame:
+def create_and_stage_weather_data(input_path: str, output_path: str, conn_type: str) -> DataFrame:
     """
     Creates and stages weather data by reading from an input path, transforming the data, 
     and writing it to an output path. This path can either be a local path, S3 path or Redshift cluster
@@ -82,10 +82,10 @@ def create_and_stage_weather_data(input_path: str, output_path: str) -> DataFram
     Returns:
         A DataFrame containing the staged weather data.
     """
-    dyf = tasks.read_json_array_from_s3(input_path)
+    dyf = tasks.read_json_array(input_path, conn_type)
     dyf = change_schema(dyf)
     df: DataFrame = dyf.toDF()
     df = sort_by_timestamp(df=df)
     df = deduplicate_by_timestamp(df=df)
     df = transform_unixtime_to_datetime(df=df)
-    tasks.write_parquet_glue(df, output_path)
+    tasks.write_parquet_glue(df, output_path, conn_type)

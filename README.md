@@ -38,24 +38,25 @@ I really like flying from/to RTHA with Transavia. Sadly, most people I know seem
 This is a serverless ETL pipeline that scrapes and preprocesses flight schedule data from [RTHA website]() and pulls weather data from [Openweather API]() to explore the effect of weather conditions on flight delay. A delayed flight is understood as a flight that lands/takes off >15 minutes later than the scheduled flight time.
 
 **Data Pull** \
-Scrapes and preprocesses flight schedule data from [RTHA website]() and pulls weather data from the [Openweather API]() via AWS Lambdas and loads it into S3 buckets as JSON objects
+Scrapes flights arrivals and departures txt data from [RTHA website]() and pulls weather data from the [Openweather API]() via AWS Lambdas and loads both into S3 buckets as JSON Array objects
 
 **ETL** \
-*Extracts* all the responses (JSON objects) from data pull lambdas of the current day and merges them into a single dataframe. \
-*Transforms* rows in dataframe using AWS Glue shell jobs; sort by timestamp of response obtainment, deduplicate duplicate entries, change unix into datetime format. \
-*Loads* dataframe into datalake (S3 + Parquet + Glue Catalog) using awswrangler
+ETL is handled by AWS Glue Spark
+*Extracts* all the responses from data pull lambdas and merges them into their respective dataframe. \
+*Transforms* rows in dataframe using Spark; schema changes, feature engineering, etc. \
+*Loads* dataframe into datalake (S3 + Parquet + AWS Data Catalog).
 
 **Analysis** \
-Create table of flights and weather data with AWS Athena; query to create final dataset that adds the current weather conditions to the scheduled flight time. Query stored in S3 as .csv file to download and perform statistical analysis on and visualise.
+Create table of arrivals, departures and weather data with AWS Athena; query to create final dataset that adds the current weather conditions to the scheduled flight time. Query stored in S3 as .csv file to download and perform statistical analysis on and visualise (once I have enough data :D)
 
 **Visualise** \
-Todo, probably Google Data Studio as it is free.
+Todo, probably Google Data Studio as it is free. AWS quicksight makes most sense since it natively integrates with AWS, but $24/month is too much for this broke student :(
 
 **Scheduler** \
 I use AWS Eventbridge Scheduler to orchestrate the data pipeline as follows:
 * Flight data pull: every hour
 * Weather data pull: every 5 mins
-* ETL jobs: once per day, at the end of the day
+* ETL jobs: every month
 * Athena query: on demand.
 
 ### Architecture Diagram
@@ -75,10 +76,11 @@ Components to acquire/install to run the project.
 * [Openweather account](https://home.openweathermap.org/users/sign_up) - To acquire an Openweather API key (free)
 
 **Software:**
-* [Python 3.9](https://www.python.org/downloads/release/python-3915/) - AWS lambda and glue do currently (25-11-2022) not support Python >3.9
+* [Python 3.10](https://www.python.org/downloads/) - Note: AWS glue 4.0 currently (06/11/2023) does not support > Python 3.10.
 * [Poetry](https://python-poetry.org/docs/#installation) - For dependency management and installing requirements
-* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-* [Terraform](https://developer.hashicorp.com/terraform/downloads)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - For managing AWS (needs to be configured)
+* [Terraform](https://developer.hashicorp.com/terraform/downloads) - For setting up cloud infrastructure
+* [Docker](https://www.docker.com/products/docker-desktop/) - For local glue development
 
 ### Installation
 
@@ -119,7 +121,8 @@ poetry run python -m pytest tests\integration
 <!-- ROADMAP -->
 ## Roadmap
 
-Todo
+- Waiting for more data to visualise and maybe do some ML :)
+- CI/CD
 
 <!-- CONTRIBUTING -->
 ## Contributing

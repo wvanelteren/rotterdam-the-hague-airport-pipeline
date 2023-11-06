@@ -24,7 +24,7 @@ ENV PATH="/home/glue_user/.local/bin:$PATH"
 
 RUN python3 -m pip install --upgrade pip --user
 COPY ../src/glue ${WORKDIR}
-COPY ../tests/glue ${WORKDIR}/tests
+COPY ../tests/unit/glue ${WORKDIR}/tests
 
 # Give write permission incase of any permission issues
 USER root

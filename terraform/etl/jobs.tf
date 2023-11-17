@@ -8,6 +8,7 @@ resource "aws_s3_bucket" "glue_script_bucket" {
   bucket = "glue-scripts-${random_uuid.uuid.result}"
 }
 
+# Import all files in the src/glue directory into the S3 bucket
 resource "aws_s3_object" "bootstrap_files" {
   for_each = fileset(local.s3_bootstrap_filepath, "**")
   bucket = aws_s3_bucket.glue_script_bucket.id
@@ -50,17 +51,18 @@ resource "aws_s3_bucket" "bucket_flight_data_clean" {
 resource "aws_glue_job" "flight_arrivals_job" {
   name     = "flight-arrivals-data-job"
   role_arn = aws_iam_role.glue_service_role.arn
+  glue_version = "4.0"
 
   command {
-    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket_domain_name}/main.py"
+    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket}/main.py"
     python_version  = "3"
   }
 
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_domain_name}/arrivals"
-    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket_domain_name}/arrivals"
+    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_location}/arrivals"
+    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/arrivals"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"
     "--FUNCTION_NAME" = "create_and_stage_flight_data"
@@ -73,17 +75,18 @@ resource "aws_glue_job" "flight_arrivals_job" {
 resource "aws_glue_job" "flight_departures_job" {
   name     = "flight-departures-data-job"
   role_arn = aws_iam_role.glue_service_role.arn
+  glue_version = "4.0"
 
   command {
-    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket_domain_name}/main.py"
+    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket}/main.py"
     python_version  = "3"
   }
 
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_domain_name}/departures"
-    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket_domain_name}/departures"
+    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_location}/departures"
+    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/departures"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"
     "--FUNCTION_NAME" = "create_and_stage_flight_data"
@@ -102,17 +105,18 @@ resource "aws_s3_bucket" "bucket_weather_data_clean" {
 resource "aws_glue_job" "glue_weather_job" {
   name     = "weather-data-job"
   role_arn = aws_iam_role.glue_service_role.arn
+  glue_version = "4.0"
 
   command {
-    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket_domain_name}/main.py"
+    script_location = "s3://${aws_s3_bucket.glue_script_bucket.bucket}/main.py"
     python_version  = "3"
   }
 
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_weather_raw_domain_name}"
-    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_weather_data_clean.bucket_domain_name}"
+    "--INPUT_PATH" = "s3://${var.bucket_weather_raw_location}"
+    "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_weather_data_clean.bucket}"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"
     "--FUNCTION_NAME" = "create_and_stage_weather_data"

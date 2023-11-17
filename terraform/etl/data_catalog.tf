@@ -19,7 +19,7 @@ resource "aws_glue_catalog_table" "weather_catalog_table" {
   }
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.bucket_weather_data_clean.bucket_domain_name}"
+    location      = "s3://${aws_s3_bucket.bucket_weather_data_clean.bucket}"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -55,7 +55,7 @@ resource "aws_glue_catalog_table" "flight_arrivals_catalog_table" {
   }
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket_domain_name}/arrivals"
+    location      = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/arrivals"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -91,7 +91,7 @@ resource "aws_glue_catalog_table" "flight_departures_catalog_table" {
   }
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket_domain_name}/departures"
+    location      = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/departures"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 

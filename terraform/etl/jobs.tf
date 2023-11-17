@@ -1,7 +1,7 @@
 resource "random_uuid" "uuid" {}
 
 locals {
-  s3_bootstrap_filepath = "${path.root}../../src/glue"
+  s3_bootstrap_filepath = "${path.root}/../src/glue"
 }
 
 resource "aws_s3_bucket" "glue_script_bucket" {

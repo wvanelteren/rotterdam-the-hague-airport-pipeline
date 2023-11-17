@@ -3,11 +3,8 @@ resource "aws_glue_catalog_database" "glue_catalog_rth_database" {
 }
 
 locals {
-  flights_columns = jsondecode(file("${path.module}/servicesetup/flight_schema.json"))
-}
-
-locals {
-  weather_columns = jsondecode(file("${path.module}/servicesetup/weather_schema.json"))
+  flights_columns = jsondecode(file("${path.root}/../servicesetup/flight_schema.json"))
+  weather_columns = jsondecode(file("${path.root}/../servicesetup/weather_schema.json"))
 }
 
 resource "aws_glue_catalog_table" "weather_catalog_table" {
@@ -72,7 +69,7 @@ resource "aws_glue_catalog_table" "flight_arrivals_catalog_table" {
     }
 
     dynamic "columns" {
-      for_each = local.flight_columns
+      for_each = local.flights_columns
       content {
         name    = columns.value.Name
         type    = columns.value.Type
@@ -84,7 +81,7 @@ resource "aws_glue_catalog_table" "flight_arrivals_catalog_table" {
 
 resource "aws_glue_catalog_table" "flight_departures_catalog_table" {
   name          = "departures"
-  database_name = "rth-airport"
+  database_name = "rth_airport"
 
   table_type = "EXTERNAL_TABLE"
 
@@ -108,7 +105,7 @@ resource "aws_glue_catalog_table" "flight_departures_catalog_table" {
     }
 
     dynamic "columns" {
-      for_each = local.flight_columns
+      for_each = local.flights_columns
       content {
         name    = columns.value.Name
         type    = columns.value.Type

@@ -16,9 +16,3 @@ variable "repo_url" {
   type        = string
   default     = "https://github.com/wvanelteren/rotterdam-the-hague-airport-pipeline.git"
 }
-
-variable "api_key" {
-  description = "The API key for OpenWeather"
-  type        = string
-  default     = "ENTER API KEY HERE"
-}

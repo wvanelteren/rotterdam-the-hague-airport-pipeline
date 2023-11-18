@@ -10,10 +10,11 @@ module "data_pull" {
 
 module "etl" {
   source = "./etl"
-  bucket_flight_raw_location = module.data_pull.bucket_flight_raw_location
-  bucket_weather_raw_location = module.data_pull.bucket_weather_raw_location
+  bucket_flight = module.data_pull.bucket_flight
+  bucket_weather = module.data_pull.bucket_weather
 }
 
 module "analyze" {
   source = "./analyze"
+  glue_catalog_rth_database_name = module.etl.glue_catalog_rth_database_name
 }

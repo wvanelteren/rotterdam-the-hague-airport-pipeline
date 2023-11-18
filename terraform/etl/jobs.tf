@@ -61,7 +61,7 @@ resource "aws_glue_job" "flight_arrivals_job" {
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_location}/arrivals"
+    "--INPUT_PATH" = "s3://${var.bucket_flight}/arrivals"
     "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/arrivals"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"
@@ -85,7 +85,7 @@ resource "aws_glue_job" "flight_departures_job" {
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_flight_raw_location}/departures"
+    "--INPUT_PATH" = "s3://${var.bucket_flight}/departures"
     "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_flight_data_clean.bucket}/departures"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"
@@ -115,7 +115,7 @@ resource "aws_glue_job" "glue_weather_job" {
     default_arguments = {
     "--job-language" = "python"
     "--job-bookmark-option" = "job-bookmark-enable"
-    "--INPUT_PATH" = "s3://${var.bucket_weather_raw_location}"
+    "--INPUT_PATH" = "s3://${var.bucket_weather}"
     "--OUTPUT_PATH" = "s3://${aws_s3_bucket.bucket_weather_data_clean.bucket}"
     "--CONN_TYPE" = "s3"
     "--MODULE_NAME" = "tasks"

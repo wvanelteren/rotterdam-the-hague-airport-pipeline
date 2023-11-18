@@ -1,7 +1,7 @@
-variable "bucket_flight_raw_location" {
+variable "bucket_flight" {
   type        = string
 }
 
-variable "bucket_weather_raw_location" {
+variable "bucket_weather" {
   type        = string
 }
